@@ -52,7 +52,19 @@ pzmap(Hz)
 hold on
 grid on
 title('Polos y ceros de la planta discreta'); %%%Ver que se puede hacer para verificar eso
+
+Pz = pole(Hz); %estos serían los polos discretos
+Pz_esperados = exp(P*T); % Es la formula que me "conecta" s y z
+
+% Comparar polos discretos esperados/teóricos y los reales
+disp('Polos discretos reales:');
+disp(Pz));
+
+disp('Polos discretos esperados:');
+disp(Pz_esperados);
+
 %% h- Respuesta al impulso o escalón.
+% Usar y justificar con lo que tenga más sentido
 % Escalón
 figure
 % Continuo
