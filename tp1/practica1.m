@@ -87,6 +87,7 @@ hold on
 % Discreto
 step(Hz)
 legend('Continuo','Discreto');
+ylabel('Posición Angular (rad)');
 % Impulso
 figure
 % Continuo
@@ -95,5 +96,6 @@ hold on
 % Discreto
 impulse(Hz)
 legend('Continuo','Discreto');
+ylabel('Posición Angular (rad)');
 %% h- Armar una simulación de la planta discreta: Simulink
 %% i- Armar una simulación de la planta continua linealizada, con los elementos necesarios para discretizarla: Simulink
