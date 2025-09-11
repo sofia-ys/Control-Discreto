@@ -11,7 +11,7 @@ denominador_p4 = [1 -3.345989984317626 2.397411576664517 -0.489145057782015]
 T_p4 = 0.014301923836314;
 Gz_p4 = tf(numerador_p4, denominador_p4, T_p4);
 % Lanzar la Herramienta
-controlSystemDesigner(Gz_p1);
+controlSystemDesigner(Gz_p4);
 %[r,p,c]=residue(num,den) %vemos si lo usamos
 %% b- Hallar el diagrama de Bode (en plano W) de la planta discreta y del conjunto controlador + planta discreta. Determinar la variación
 % en el margen de ganancia y fase. ¿Estos márgenes, mejoran o empeoran?
