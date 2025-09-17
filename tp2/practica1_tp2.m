@@ -11,64 +11,85 @@ denominador_p1 = [1 -1.978426373061843 0.978785811198180 -3.594381363373757e-4];
 T_p1 = 1.109817844007972;
 Gz_p1 = tf(numerador_p1, denominador_p1, T_p1);
 % Se lanza la herramienta
-%controlSystemDesigner(Gz_p1);
-%Kp Ki Kd
-Tfinal = 200;
-%item 1
-Cz_p1_1 = pid(10.68, 0.01, 0, T_p1/10, 'Ts', T_p1);  
-% item 2
-Cz_p1_2 = pid(4.3, 0, 0, 'Ts', T_p1);
-%Cz_p1_propuesto = pid(2, 0.05, 2, 'Ts', T_p1);
-%a=stepinfo(C)
+% controlSystemDesigner(Gz_p1);
+% Se elige un tiempo suficientemente grande como para reflejar que el
+% sistema efectivamente alcanza el estado estacionario.
+Tfinal = 20000;
+% Compensador I
+Cz_p1_1 = pid(9.22, 0.01, 0, T_p1/10, 'Ts', T_p1); %Kp Ki Kd
+% Compensador II
+Cz_p1_2 = pid(3.1, 0, 0, T_p1/10, 'Ts', T_p1); %Kp Ki Kd
+% Salida I
 Tz_p1_1 = feedback(series(Cz_p1_1,Gz_p1),1);
-[y1,t1] = step(Tz_p1_1);
-step(Tz_p1_1);
-info_1 = stepinfo(y1,t1);
+% Salida II
 Tz_p1_2 = feedback(series(Cz_p1_2,Gz_p1),1);
-[y2,t2] = step(Tz_p1_2);
+% Gráficos e información
+[y1,t1] = step(Tz_p1_1,Tfinal);
+[y2,t2] = step(Tz_p1_2,Tfinal);
+figure
+hold on
+step(Tz_p1_1);
+title('Respuesta al escalón 20% sobrepico')
+info_1 = stepinfo(y1,t1);
+figure
+hold on
 step(Tz_p1_2);
+title('Respuesta al escalón 0% sobrepico')
 info_2 = stepinfo(y2,t2)
-%stepinfo(Tz_p1)
+% Error de estado estacionario al escalón
 ess_1 = 1 - y1(end);
 ess_2 = 1 - y2(end);
-%step(Tz_p1);
-fprintf('EEE 1 (porcentaje): %.10f\n',ess_1*100);
-fprintf('EEE 2 (porcentaje): %.10f\n',ess_2*100);
-%grid on; 
-%stepinfo(Tz_p1)
-%b=stepinfo(CL)
-%hold on
-%margin(series(C,Gz_p1))
-%%
-% Asumiendo que ya tienes Tz_p1 (sistema a lazo cerrado) y el período T
+fprintf('EEE 1: %.10f\n',ess_1);
+fprintf('EEE 2: %.10f\n',ess_2);
+%% b- Hallar el diagrama de Bode (en plano W) de la planta discreta y del conjunto controlador
+% + planta discreta. Determinar la variación en el margen de ganancia y fase. ¿Estos
+% márgenes, mejoran o empeoran?
 
-% 1. Definir el tiempo de simulación
-% t_final = 150; % Un tiempo suficientemente largo para llegar al estado estacionario
-% t = 0:T_p1:t_final;
-% 
-% % 2. Crear la señal de entrada rampa
-% r = t; % Rampa de pendiente 1
-% 
-% % 3. Simular la respuesta del sistema a lazo cerrado a la rampa
-% y = lsim(Tz_p1, r, t);
-% 
-% % 4. Calcular y graficar el error
-% error = r' - y; % Ojo con las dimensiones de los vectores
-% 
-% figure;
-% plot(t, r, 'b--', t, y, 'r-');
-% legend('Entrada (Rampa)', 'Salida del Sistema');
-% title('Respuesta del Sistema a una Rampa');
-% grid on;
-% hold on
-% plot(t, error);
-% %title('Error del Sistema frente a una Rampa');
-% legend('Error del Sistema frente a una Rampa')
-% xlabel('Tiempo (s)');
-% ylabel('Error');
-% grid on;
-% 
-% % 5. Verificar el valor final del error
-% error_estacionario_simulado = error(end);
-% % disp(['Error estacionario predicho: ', num2str(ess_calculado)]); % ess_calculado es tu resultado teórico
-% disp(['Error estacionario verificado en simulación: ', num2str(error_estacionario_simulado)]);
+% Planta original convertida a W
+Gs_p1=d2c(Gz_p1, 'tustin');
+% Planta compensada I convertida a W
+Ts_p1_1=d2c(Tz_p1_1, 'tustin');
+% Planta compensada II convertida a W
+Ts_p1_2=d2c(Tz_p1_2, 'tustin');
+
+%%% REVISAR!!!
+figure
+hold on
+bodeplot(Gs_p1);
+bodeplot(series(Cz_p1_1, Gz_p1));
+legend('Planta Original', 'Planta + Controlador');
+figure 
+hold on
+bodeplot(Gs_p1);
+bodeplot(series(Cz_p1_2, Gz_p1));
+legend('Planta Original', 'Planta + Controlador');
+grid on
+
+% Se calculan los márgenes de ganancia y fase
+[Gm_planta, Pm_planta] = margin(Gs_p1);
+[Gm_compensado_1, Pm_compensado_1] = margin(series(Cz_p1_1, Gz_p1));
+[Gm_compensado_2, Pm_compensado_2] = margin(series(Cz_p1_2, Gz_p1));
+%isstable(Ts_p1_1)
+%isstable(Ts_p1_2)
+ 
+fprintf('Planta Original: Margen de Ganancia = %f dB, Margen de Fase = %f deg\n', 20*log10(Gm_planta), Pm_planta);
+fprintf('Sistema Compensado I : Margen de Ganancia = %f dB, Margen de Fase = %f deg\n', 20*log10(Gm_compensado_1), Pm_compensado_1);
+fprintf('Sistema Compensado II: Margen de Ganancia = %f dB, Margen de Fase = %f deg\n', 20*log10(Gm_compensado_2), Pm_compensado_2);
+
+%% c- Verificar el comportamiento del sistema a lazo cerrado en una simulación usando la
+% planta discreta. Obtener la salida del sistema y el esfuerzo de control.
+% SIMULINK: Necesito C(z) y G(z)
+%% d- Verificar el comportamiento del sistema a lazo cerrado en una simulación, usando la
+% planta continua linealizada y los elementos necesarios para discretizarla. Obtener la
+% salida del sistema (tanto discreto como continuo) y el esfuerzo de control
+% SIMULINK: A lo anterior, le sumo G(s)
+%% e- Si la planta es no lineal...NO APLICA A ESTE
+%% f- Predecir el error estacionario a la rampa (P1y P2) o al escalón (P3). Verificarlo en una
+% simulación lineal.
+% PLANTEAR 
+%% g- Se requiere utilizar un ADC de 10 bits para digitalizar la salida de la planta.
+% I. Proponga un rango de entrada del ADC y calcule el paso de cuantización.
+% II. Pruebe en una simulación los efectos de agregar el ADC.
+% EN FUNCIÓN DE LOS RESULTADOS DE LOS GRÁFICOS SE ELIGE RANGO PASO Y
+% DESPUÉS SIMULINK
+
