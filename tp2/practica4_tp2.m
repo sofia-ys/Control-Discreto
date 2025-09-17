@@ -18,19 +18,6 @@ Gz_p4 = tf(numerador_p4, denominador_p4, T_p4);
 %controlSystemDesigner(Gz_p4);
 %[r,p,c]=residue(num,den) %vemos si lo usamos
 
-%%% Primero se verifica que el sistema inestable puede ser controlado 
-%%% (BUSCAR DESPUÉS BIEN PARA JUSTIFICAR EN EL INFORME)
-% [A,B,C,D] = tf2ss(numerador_p4, denominador_p4);
-% co = ctrb(A,B);
-% rank(co);
-% 
-% if rank(co) == size(A,1)
-%     fprintf('El sistema es controlable\n')
-% elseif rank(co) < size(A,1)
-%     fprintf('El sistema no es controlable\n')
-% end
-%%%
-
 % Se arma la C(z) y se define el sistema de lazo abierto L(z) = C(z) * G(z)
 z_c=[0.5 0.5]; % Ceros del compensador
 p_c=[0.3 -0.7]; % Polos del compensador
