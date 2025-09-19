@@ -39,7 +39,7 @@ polos_lc_final_2 = pole(Tz_p4_2);
 magnitud_polos_final_1 = abs(polos_lc_final_1)
 magnitud_polos_final_2 = abs(polos_lc_final_2)
 
-% Verifica si el sistema en lazo cerrado es estable
+% Se verifica si el sistema en lazo cerrado es estable
 if isstable(Tz_p4_1)
     fprintf('El controlador I estabiliza el sistema en lazo cerrado.\n');
 else
@@ -103,14 +103,22 @@ fprintf('Sistema Compensado II: Margen de Ganancia = %f dB, Margen de Fase = %f 
 %% c- Verificar el comportamiento del sistema a lazo cerrado en una simulación usando la
 % planta discreta. Obtener la salida del sistema y el esfuerzo de control.
 % SIMULINK: Necesito C(z) y G(z)
+% G(z) es dato de antes: Gz_p4
+% C(z) es Cz_p4_1 y Cz_p4_2. Se expanden para ver los coeficientes y
+% copiarlo más fácil en SIMULINK
+Cz_p4_1_expand=tf(Cz_p4_1);
+Cz_p4_2_expand=tf(Cz_p4_2);
 %% d- Verificar el comportamiento del sistema a lazo cerrado en una simulación, usando la
 % planta continua linealizada y los elementos necesarios para discretizarla. Obtener la
 % salida del sistema (tanto discreto como continuo) y el esfuerzo de control
 % SIMULINK: A lo anterior, le sumo G(s)
-%% e- Si la planta es no lineal...NO APLICA A ESTE
+%% e- Si la planta es no lineal, verificar el comportamiento del sistema a lazo cerrado en una
+% simulación, usando la planta continua no lineal y los elementos necesarios para
+% discretizarla. Obtener la salida del sistema (tanto discreto como continuo) y el esfuerzo
+% de control. Se aconseja tener cuidado con los valores de la referencia, y con el hecho
+% que su controlador fue pensado para la planta linealizada.
 %% f- Predecir el error estacionario a la rampa (P1y P2) o al escalón (P3). Verificarlo en una
-% simulación lineal.
-% PLANTEAR 
+% simulación lineal: NO APLICA
 %% g- Se requiere utilizar un ADC de 10 bits para digitalizar la salida de la planta.
 % I. Proponga un rango de entrada del ADC y calcule el paso de cuantización.
 % II. Pruebe en una simulación los efectos de agregar el ADC.
