@@ -36,8 +36,10 @@ Tz_p4_2 = feedback(series(Cz_p4_2,Gz_p4),1);
 % Se analizan los polos de lazo cerrado
 polos_lc_final_1 = pole(Tz_p4_1);
 polos_lc_final_2 = pole(Tz_p4_2);
-magnitud_polos_final_1 = abs(polos_lc_final_1)
-magnitud_polos_final_2 = abs(polos_lc_final_2)
+magnitud_polos_final_1 = abs(polos_lc_final_1);
+magnitud_polos_final_2 = abs(polos_lc_final_2);
+fprintf('Magnitud de los polos con compensador I: %.5f\n',magnitud_polos_final_1);
+fprintf('Magnitud de los polos con compensador II: %.5f\n',magnitud_polos_final_2);
 
 % Se verifica si el sistema en lazo cerrado es estable
 if isstable(Tz_p4_1)
@@ -55,18 +57,19 @@ end
 % Gráficos e información
 figure
 hold on
-step(Tz_p4_1);
+% Se multiplica por 0.005 para que el escalón del step sea de la amplitud
+% de y_o que es el valor en torno al cual se linealizó este problema.
+step(0.005*Tz_p4_1);
 title('Respuesta al escalón 20% sobrepico')
-stepinfo(Tz_p4_1)
+stepinfo(0.005*Tz_p4_1)
 figure
 hold on
-step(Tz_p4_2);
+step(0.005*Tz_p4_2);
 title('Respuesta al escalón 0% sobrepico')
-stepinfo(Tz_p4_2)
+stepinfo(0.005*Tz_p4_2)
 
 %% b- Hallar el diagrama de Bode (en plano W) de la planta discreta y del conjunto controlador + planta discreta. Determinar la variación
 % en el margen de ganancia y fase. ¿Estos márgenes, mejoran o empeoran?
-% Opciones para el diagrama de Bode para visualizar el plano W
 % La frecuencia en el plano W (v) se relaciona con la frecuencia real (w) por v = (2/T)*tan(w*T/2)
 
 % Planta original convertida a W
@@ -91,6 +94,7 @@ legend('Planta Original', 'Planta + Controlador');
 title('Bode: Planta original y compensador II')
 
 % Se calculan los márgenes de ganancia y fase
+fprintf('Aparece el warning porque Pm_planta --> inf\n')
 [Gm_planta, Pm_planta] = margin(Gs_p4);
 [Gm_compensado_1, Pm_compensado_1] = margin(series(Cz_p4_1, Gz_p4));
 [Gm_compensado_2, Pm_compensado_2] = margin(series(Cz_p4_2, Gz_p4));
@@ -111,16 +115,16 @@ Cz_p4_2_expand=tf(Cz_p4_2);
 %% d- Verificar el comportamiento del sistema a lazo cerrado en una simulación, usando la
 % planta continua linealizada y los elementos necesarios para discretizarla. Obtener la
 % salida del sistema (tanto discreto como continuo) y el esfuerzo de control
-% SIMULINK: A lo anterior, le sumo G(s)
+% SIMULINK: A lo anterior, le sumo G(s) (ya está calculada de antes)
 %% e- Si la planta es no lineal, verificar el comportamiento del sistema a lazo cerrado en una
 % simulación, usando la planta continua no lineal y los elementos necesarios para
 % discretizarla. Obtener la salida del sistema (tanto discreto como continuo) y el esfuerzo
 % de control. Se aconseja tener cuidado con los valores de la referencia, y con el hecho
 % que su controlador fue pensado para la planta linealizada.
+% SIMULINK
 %% f- Predecir el error estacionario a la rampa (P1y P2) o al escalón (P3). Verificarlo en una
 % simulación lineal: NO APLICA
 %% g- Se requiere utilizar un ADC de 10 bits para digitalizar la salida de la planta.
 % I. Proponga un rango de entrada del ADC y calcule el paso de cuantización.
 % II. Pruebe en una simulación los efectos de agregar el ADC.
-% EN FUNCIÓN DE LOS RESULTADOS DE LOS GRÁFICOS SE ELIGE RANGO PASO Y
-% DESPUÉS SIMULINK
+% En función de las respuestas al escalón --> SIMULINK
