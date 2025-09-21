@@ -34,12 +34,12 @@ figure
 hold on
 step(Tz_p1_1);
 title('Respuesta al escalón 20% sobrepico')
-info_1 = stepinfo(y1,t1);
+info_1 = stepinfo(y1,t1)
 figure
 hold on
 step(Tz_p1_2);
 title('Respuesta al escalón 0% sobrepico')
-info_2 = stepinfo(y2,t2);
+info_2 = stepinfo(y2,t2)
 
 % Error de estado estacionario al escalón
 ess_1 = 1 - y1(end);
@@ -56,6 +56,8 @@ Gs_p1=d2c(Gz_p1, 'tustin');
 Ts_p1_1=d2c(Tz_p1_1, 'tustin');
 % Planta compensada II convertida a W
 Ts_p1_2=d2c(Tz_p1_2, 'tustin');
+% Si bien en ventana del workspace o línea de comando aparece como "s" en
+% realidad está en variable w!
 
 %Gráficos Bode
 figure
@@ -94,21 +96,21 @@ Cz_p1_2_expand=tf(Cz_p1_2);
 %% d- Verificar el comportamiento del sistema a lazo cerrado en una simulación, usando la
 % planta continua linealizada y los elementos necesarios para discretizarla. Obtener la
 % salida del sistema (tanto discreto como continuo) y el esfuerzo de control
-% SIMULINK: A lo anterior, le sumo G(s) (ya fue hallada previamente)
+% SIMULINK: A lo anterior, le sumo G(s) (ya se conoce del TP1)
 %% e- Si la planta es no lineal...NO APLICA A ESTE PROBLEMA
 %% f- Predecir el error estacionario a la rampa (P1 y P2) o al escalón (P3). Verificarlo en una
 % simulación lineal.
 
+% Lo que no aparezca acá fué deducido a mano o de la teoría de sistemas de
+% control
 % Con compensador I error a la rampa 0
 % Con compensador II error a la rampa finito
 z0=1; % Polo z=1
 divisor = [1 -z0]; % Polinomio: (z - z0)
 [cociente, resto] = deconv(denominador_p1, divisor);
-err=(sum(cociente)*T_p1)/(3.1*sum(numerador_p1));
+err=(sum(cociente)*T_p1)/(3.1*sum(numerador_p1)); %Se dedujo a mano
 fprintf('Error a la rampa con compensador II: %.5f\n',err);
 %% g- Se requiere utilizar un ADC de 10 bits para digitalizar la salida de la planta.
 % I. Proponga un rango de entrada del ADC y calcule el paso de cuantización.
 % II. Pruebe en una simulación los efectos de agregar el ADC.
-% EN FUNCIÓN DE LOS RESULTADOS DE LOS GRÁFICOS SE ELIGE RANGO PASO Y
-% DESPUÉS SIMULINK
-
+% En función de las respuestas al escalón --> SIMULINK
