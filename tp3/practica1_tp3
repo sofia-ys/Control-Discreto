@@ -1,0 +1,28 @@
+%% Limpiar
+clear
+clc
+close all
+%% a- Detallar las ecuaciones diferenciales lineales y la transferencia del 
+% sistema continuo TFp(s) y discreto suponiendo un ZOH a la entrada de la 
+% planta TFp(z) encontradas en el TP01.
+
+%% b- Obtener la representación por Variable de Estado del sistema SISO a 
+% partir de la función de transferencia continua TFp(s). Ídem a partir de 
+% la representación discreta TFp(z). Especificar claramente los valores de 
+% las matrices [A, B, C, D], y [G, H, Cd, Dd].
+
+%% c- Obtener la representación por Variable de Estado del sistema continuo
+% donde los estados coincidan con variables físicas del sistema. Las 
+% entradas y salidas del sistema siguen siendo las de la transferencia 
+% SISO. Obtener la representación de este modelo, discretizado. Especificar
+% claramente los valores de las matrices [A, B, C, D], y [G, H, Cd, Dd].
+
+%% d- Comparar en una simulación los tres modelos continuos (Transferencia,
+% Variable de estado desde transferencia y Variable de estado con variables
+% reales). Saque conclusiones de la comparación.
+%%% EN SIMULINK
+
+%% e- Comparar en una simulación los tres modelos discretos (Transferencia,
+% Variable de estado desde transferencia y Variable de estado con variables
+% reales). Saque conclusiones de la comparación.
+%%% EN SIMULINK
